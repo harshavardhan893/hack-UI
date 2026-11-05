@@ -2,181 +2,973 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EduVerse | Education App Collection</title>
-    <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EduVerse | All-in-One Learning Hub</title>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap');
+
+:root {
+    --bg: #08111f;
+    --text: #eef5ff;
+    --muted: #9aabc0;
+    --accent: #65e6b5;
+    --panel: rgba(255,255,255,.06);
+    --line: rgba(255,255,255,.13);
+}
+
+body.light {
+    --bg: #f3f7fb;
+    --text: #101828;
+    --muted: #5d6b7e;
+    --panel: rgba(255,255,255,.85);
+    --line: rgba(16,24,40,.13);
+}
+
+* {
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    transition: .3s;
+    overflow-x: hidden;
+}
+
+button, input {
+    font: inherit;
+}
+
+button {
+    cursor: pointer;
+}
+
+.ambient {
+    position: fixed;
+    width: 400px;
+    height: 400px;
+    border-radius: 50%;
+    filter: blur(100px);
+    opacity: .2;
+    pointer-events: none;
+    z-index: -1;
+    animation: float 12s infinite alternate;
+}
+
+.ambient.one {
+    background: #0ea5a4;
+    top: 0;
+    left: -150px;
+}
+
+.ambient.two {
+    background: #6554d9;
+    right: -150px;
+    top: 50%;
+}
+
+@keyframes float {
+    to {
+        transform: translate(80px, 60px) scale(1.2);
+    }
+}
+
+.cursor-glow {
+    position: fixed;
+    width: 250px;
+    height: 250px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(101,230,181,.12), transparent 70%);
+    pointer-events: none;
+    transform: translate(-50%,-50%);
+    z-index: 0;
+}
+
+header {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 7%;
+    background: rgba(8,17,31,.85);
+    backdrop-filter: blur(18px);
+    border-bottom: 1px solid var(--line);
+}
+
+body.light header {
+    background: rgba(243,247,251,.9);
+}
+
+.brand {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 23px;
+    font-weight: 700;
+    letter-spacing: 2px;
+}
+
+.brand span,
+h1 span,
+.about h2 span {
+    color: var(--accent);
+}
+
+nav {
+    display: flex;
+    gap: 20px;
+}
+
+nav button {
+    border: 0;
+    background: transparent;
+    color: var(--muted);
+    font-weight: 700;
+}
+
+nav button:hover {
+    color: var(--accent);
+}
+
+.theme {
+    padding: 10px 14px;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    background: var(--panel);
+    color: var(--text);
+}
+
+.hero {
+    min-height: 70vh;
+    padding: 100px 9%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    background: radial-gradient(circle at 80% 30%, rgba(21,94,117,.3), transparent 40%);
+}
+
+.eyebrow {
+    color: var(--accent);
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 2px;
+}
+
+.hero h1 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: clamp(50px, 9vw, 100px);
+    line-height: 1;
+    margin: 15px 0;
+}
+
+.hero p {
+    max-width: 600px;
+    color: var(--muted);
+    font-size: 18px;
+}
+
+.primary,
+.btn {
+    display: inline-block;
+    width: fit-content;
+    padding: 13px 20px;
+    margin-top: 15px;
+    border: none;
+    border-radius: 12px;
+    background: var(--accent);
+    color: #061019;
+    font-weight: 800;
+    text-decoration: none;
+    transition: .25s;
+}
+
+.primary:hover,
+.btn:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 30px rgba(101,230,181,.25);
+}
+
+.apps,
+.about,
+.workspace {
+    padding: 75px 9%;
+}
+
+.section-title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 42px;
+    margin: 10px 0 35px;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+}
+
+.card {
+    padding: 25px;
+    border: 1px solid var(--line);
+    border-radius: 22px;
+    background: var(--panel);
+    color: var(--text);
+    text-decoration: none;
+    min-height: 300px;
+    display: flex;
+    flex-direction: column;
+    transition: transform .2s, border-color .3s, box-shadow .3s;
+}
+
+.card:hover {
+    border-color: var(--accent);
+    box-shadow: 0 15px 40px rgba(0,0,0,.2);
+}
+
+.card .icon {
+    font-size: 42px;
+    margin-bottom: 25px;
+}
+
+.card h3 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 23px;
+}
+
+.card p {
+    color: var(--muted);
+    flex: 1;
+}
+
+.card b {
+    color: var(--accent);
+}
+
+.category {
+    color: var(--accent);
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 2px;
+}
+
+.about {
+    border-top: 1px solid var(--line);
+}
+
+.about h2 {
+    font-size: 45px;
+    font-family: 'Space Grotesk', sans-serif;
+}
+
+.about p {
+    color: var(--muted);
+}
+
+footer {
+    display: flex;
+    justify-content: space-between;
+    padding: 25px 9%;
+    color: var(--muted);
+    border-top: 1px solid var(--line);
+    font-size: 13px;
+}
+
+/* APPLICATION PAGES */
+
+.workspace {
+    min-height: 80vh;
+    animation: appear .5s ease;
+}
+
+@keyframes appear {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.back {
+    color: var(--accent);
+    cursor: pointer;
+    border: none;
+    background: transparent;
+    font-weight: 700;
+    margin-bottom: 25px;
+}
+
+.workspace h1 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 45px;
+}
+
+.panel {
+    padding: 25px;
+    border: 1px solid var(--line);
+    border-radius: 20px;
+    background: var(--panel);
+    margin: 20px 0;
+}
+
+.progress {
+    height: 10px;
+    background: var(--line);
+    border-radius: 20px;
+    overflow: hidden;
+}
+
+.progress i {
+    display: block;
+    height: 100%;
+    width: 0;
+    background: var(--accent);
+    transition: width .4s;
+}
+
+.lesson-grid,
+.flash-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+}
+
+.lesson,
+.flash {
+    padding: 20px;
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    background: var(--panel);
+}
+
+.lesson p,
+.flash p {
+    color: var(--muted);
+}
+
+.btn.alt {
+    background: transparent;
+    color: var(--accent);
+    border: 1px solid var(--accent);
+}
+
+input {
+    padding: 13px;
+    margin: 5px;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    background: var(--bg);
+    color: var(--text);
+    max-width: 100%;
+}
+
+.quiz-option {
+    display: block;
+    width: 100%;
+    text-align: left;
+    margin: 12px 0;
+    padding: 15px;
+    background: var(--panel);
+    color: var(--text);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+}
+
+.quiz-option:hover {
+    border-color: var(--accent);
+}
+
+.muted {
+    color: var(--muted);
+}
+
+.reveal {
+    opacity: 0;
+    transform: translateY(25px);
+    transition: .7s;
+}
+
+.reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+@media(max-width:900px) {
+    .grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media(max-width:600px) {
+    header {
+        padding: 14px 5%;
+    }
+
+    nav {
+        gap: 5px;
+    }
+
+    nav button {
+        font-size: 11px;
+        padding: 5px;
+    }
+
+    .hero {
+        padding: 75px 7%;
+    }
+
+    .apps,
+    .about,
+    .workspace {
+        padding: 55px 7%;
+    }
+
+    .grid,
+    .lesson-grid,
+    .flash-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .section-title {
+        font-size: 32px;
+    }
+
+    .cursor-glow {
+        display: none;
+    }
+
+    footer {
+        padding: 20px 7%;
+    }
+}
+
+@media(prefers-reduced-motion:reduce) {
+    *,*::before,*::after {
+        scroll-behavior: auto !important;
+        animation-duration: .01ms !important;
+        transition-duration: .01ms !important;
+    }
+    .reveal {
+        opacity: 1;
+        transform: none;
+    }
+}
+</style>
 </head>
 
 <body>
 
-<div class="cursor-glow"></div>
-<div class="ambient ambient-one"></div>
-<div class="ambient ambient-two"></div>
+<div class="ambient one"></div>
+<div class="ambient two"></div>
+<div class="cursor-glow" id="glow"></div>
 
 <header>
-    <a class="brand" href="#home">EDU<span>VERSE</span></a>
+    <div class="brand">EDU<span>VERSE</span></div>
 
     <nav>
-        <a href="#home">Home</a>
-        <a href="#apps">Education Apps</a>
-        <a href="#about">About</a>
+        <button onclick="showHome()">Home</button>
+        <button onclick="showApps()">Apps</button>
+        <button onclick="showAbout()">About</button>
     </nav>
 
-    <button id="themeBtn" type="button">☾</button>
+    <button class="theme" onclick="toggleTheme()" id="themeBtn">☾</button>
 </header>
 
-<main id="home">
+<main id="main">
 
-    <section class="hero">
-        <p class="eyebrow reveal">
-            ✦ EDUCATION UI TEMPLATE COLLECTION
-        </p>
+<section class="hero">
+    <p class="eyebrow reveal">✦ EDUCATION UI TEMPLATE COLLECTION</p>
 
-        <h1 class="reveal">
-            Learn smarter.<br>
-            <span>Build better.</span>
-        </h1>
+    <h1 class="reveal">
+        Learn smarter.<br>
+        <span>Build better.</span>
+    </h1>
 
-        <p class="heroText reveal">
-            Four distinct education applications in one collection.
-            Choose an app and make your next learning session count.
-        </p>
+    <p class="reveal">
+        Four powerful educational applications in one learning hub.
+        Learn, practice, revise and organize your studies.
+    </p>
 
-        <a class="primary reveal" href="#apps">
-            Explore Apps <span>↘</span>
-        </a>
+    <button class="primary reveal" onclick="showApps()">
+        Explore Applications ↓
+    </button>
+</section>
 
-        <div class="hero-note reveal">
-            <span class="pulse-dot"></span>
-            FOUR APPS · ONE LEARNING HUB
-        </div>
-    </section>
+<section class="apps" id="apps">
+    <p class="eyebrow">✦ EDUCATION SECTOR</p>
+    <h2 class="section-title">Four Learning Experiences</h2>
 
+    <div class="grid">
 
-    <section id="apps" class="apps">
-
-        <div class="sectionHead reveal">
-            <div>
-                <p class="eyebrow">✦ EDUCATION SECTOR</p>
-                <h2>Four Learning Experiences</h2>
-            </div>
-
-            <p>Select a card to launch an application ↗</p>
+        <div class="card reveal" onclick="openApp('classroom')">
+            <div class="icon">🎓</div>
+            <span class="category">01 · CLASSROOM</span>
+            <h3>Virtual Classroom</h3>
+            <p>Study lessons and track course progress.</p>
+            <b>Open Application →</b>
         </div>
 
-
-        <div class="grid">
-
-            <a class="card reveal"
-               href="./virtual-classroom/index.html">
-
-                <div class="card-top">
-                    <div class="icon">🎓</div>
-                    <span class="number">01 / 04</span>
-                </div>
-
-                <span class="category">CLASSROOM</span>
-
-                <h3>Virtual Classroom</h3>
-
-                <p>
-                    Course modules, lessons and progress tracking.
-                </p>
-
-                <b>Open App ↗</b>
-            </a>
-
-
-            <a class="card reveal"
-               href="./quiz-arena/index.html">
-
-                <div class="card-top">
-                    <div class="icon">🧠</div>
-                    <span class="number">02 / 04</span>
-                </div>
-
-                <span class="category">ASSESSMENT</span>
-
-                <h3>Quiz Arena</h3>
-
-                <p>
-                    Interactive quizzes, answers and scoring.
-                </p>
-
-                <b>Open App ↗</b>
-            </a>
-
-
-            <a class="card reveal"
-               href="./flashcard-studio/index.html">
-
-                <div class="card-top">
-                    <div class="icon">🗂️</div>
-                    <span class="number">03 / 04</span>
-                </div>
-
-                <span class="category">REVISION</span>
-
-                <h3>Flashcard Studio</h3>
-
-                <p>
-                    Create, flip and manage study flashcards.
-                </p>
-
-                <b>Open App ↗</b>
-            </a>
-
-
-            <a class="card reveal"
-               href="./study-planner/index.html">
-
-                <div class="card-top">
-                    <div class="icon">📅</div>
-                    <span class="number">04 / 04</span>
-                </div>
-
-                <span class="category">PRODUCTIVITY</span>
-
-                <h3>Study Planner</h3>
-
-                <p>
-                    Add tasks and track your study progress.
-                </p>
-
-                <b>Open App ↗</b>
-            </a>
-
+        <div class="card reveal" onclick="openApp('quiz')">
+            <div class="icon">🧠</div>
+            <span class="category">02 · ASSESSMENT</span>
+            <h3>Quiz Arena</h3>
+            <p>Test your knowledge with interactive quizzes.</p>
+            <b>Open Application →</b>
         </div>
-    </section>
 
+        <div class="card reveal" onclick="openApp('flashcards')">
+            <div class="icon">🗂️</div>
+            <span class="category">03 · REVISION</span>
+            <h3>Flashcard Studio</h3>
+            <p>Create and revise your own flashcards.</p>
+            <b>Open Application →</b>
+        </div>
 
-    <section id="about" class="about reveal">
+        <div class="card reveal" onclick="openApp('planner')">
+            <div class="icon">📅</div>
+            <span class="category">04 · PRODUCTIVITY</span>
+            <h3>Study Planner</h3>
+            <p>Organize tasks and track your progress.</p>
+            <b>Open Application →</b>
+        </div>
 
-        <p class="eyebrow">✦ THE PROJECT</p>
+    </div>
+</section>
 
-        <h2>
-            One place for every<br>
-            <span>learning journey.</span>
-        </h2>
-
-        <p>
-            Four independent educational applications
-            brought together in one simple, modern hub.
-        </p>
-
-    </section>
+<section class="about" id="about">
+    <p class="eyebrow">✦ ABOUT THE PROJECT</p>
+    <h2>One place for every <span>learning journey.</span></h2>
+    <p>
+        EduVerse brings together four useful learning tools
+        in one interactive educational platform.
+    </p>
+</section>
 
 </main>
-
 
 <footer>
     <span>© 2026 EduVerse</span>
     <span>Learn · Create · Grow</span>
 </footer>
 
+<script>
 
-<script src="script.js"></script>
+/* NAVIGATION */
+
+const main = document.getElementById("main");
+
+function showHome() {
+    location.hash = "";
+    main.innerHTML = homeContent;
+    activateEffects();
+}
+
+const homeContent = main.innerHTML;
+
+function showApps() {
+    document.getElementById("apps")?.scrollIntoView({behavior:"smooth"});
+}
+
+function showAbout() {
+    document.getElementById("about")?.scrollIntoView({behavior:"smooth"});
+}
+
+function backHome() {
+    main.innerHTML = homeContent;
+    location.hash = "";
+    activateEffects();
+    window.scrollTo({top:0, behavior:"smooth"});
+}
+
+
+/* THEME */
+
+function toggleTheme() {
+    document.body.classList.toggle("light");
+
+    document.getElementById("themeBtn").textContent =
+        document.body.classList.contains("light") ? "☀" : "☾";
+}
+
+
+/* VIRTUAL CLASSROOM */
+
+const lessons = [
+    ["HTML Foundations","Learn webpage structure using HTML."],
+    ["CSS Essentials","Learn colors, layouts and responsive design."],
+    ["JavaScript Basics","Learn programming and webpage interactivity."],
+    ["DOM Interaction","Learn how JavaScript controls webpage elements."],
+    ["Final Project","Combine HTML, CSS and JavaScript."]
+];
+
+let completed = JSON.parse(localStorage.getItem("classDone") || "[]");
+
+function openClassroom() {
+    main.innerHTML = `
+    <section class="workspace">
+        <button class="back" onclick="backHome()">← Back to Home</button>
+
+        <p class="eyebrow">ONLINE LEARNING</p>
+        <h1>🎓 Virtual Classroom</h1>
+        <p class="muted">Web Development Fundamentals</p>
+
+        <div class="panel">
+            <h3 id="progressText"></h3>
+            <div class="progress">
+                <i id="bar"></i>
+            </div>
+        </div>
+
+        <div class="lesson-grid" id="lessons"></div>
+    </section>`;
+
+    renderLessons();
+}
+
+function renderLessons() {
+    document.getElementById("lessons").innerHTML =
+        lessons.map((lesson,i) => `
+        <div class="lesson">
+            <span class="category">LESSON ${i+1}</span>
+            <h3>${lesson[0]}</h3>
+            <p>${lesson[1]}</p>
+            <button class="btn ${completed.includes(i)?"alt":""}"
+                onclick="toggleLesson(${i})">
+                ${completed.includes(i)?"✓ Completed":"Mark Complete"}
+            </button>
+        </div>
+    `).join("");
+
+    let percentage = completed.length / lessons.length * 100;
+
+    document.getElementById("bar").style.width = percentage + "%";
+
+    document.getElementById("progressText").textContent =
+        `${completed.length} of ${lessons.length} lessons completed`;
+}
+
+function toggleLesson(i) {
+    completed = completed.includes(i)
+        ? completed.filter(x => x !== i)
+        : [...completed,i];
+
+    localStorage.setItem("classDone",JSON.stringify(completed));
+    renderLessons();
+}
+
+
+/* QUIZ ARENA */
+
+const questions = [
+    ["Which language structures a webpage?","HTML",["Python","HTML","SQL","C"]],
+    ["Which CSS property changes text size?","font-size",["display","font-size","padding","position"]],
+    ["Which method selects an element by ID?","getElementById",["querySelectorAll","getElementById","getClass","selectId"]],
+    ["Which browser feature stores data?","localStorage",["localStorage","console","alert","prompt"]],
+    ["What does CSS control?","Presentation",["Database","Presentation","Server hardware","Compiler"]]
+];
+
+let questionIndex = 0;
+let score = 0;
+
+function openQuiz() {
+    questionIndex = 0;
+    score = 0;
+    renderQuiz();
+}
+
+function renderQuiz() {
+    if(questionIndex >= questions.length) {
+        main.innerHTML = `
+        <section class="workspace">
+            <button class="back" onclick="backHome()">← Back to Home</button>
+            <div class="panel">
+                <h1>🎉 Quiz Completed!</h1>
+                <h2>Your Score: ${score}/${questions.length}</h2>
+                <p class="muted">
+                    ${score===questions.length
+                    ?"Perfect score! Excellent work!"
+                    :"Good attempt! Keep practicing."}
+                </p>
+                <button class="btn" onclick="openQuiz()">Restart Quiz</button>
+            </div>
+        </section>`;
+        return;
+    }
+
+    let q = questions[questionIndex];
+
+    main.innerHTML = `
+    <section class="workspace">
+        <button class="back" onclick="backHome()">← Back to Home</button>
+
+        <p class="eyebrow">ASSESSMENT</p>
+        <h1>🧠 Quiz Arena</h1>
+
+        <div class="panel">
+            <p class="category">
+                QUESTION ${questionIndex+1} OF ${questions.length}
+            </p>
+
+            <h2>${q[0]}</h2>
+
+            ${q[2].map((answer,i) => `
+                <button class="quiz-option" onclick="answerQuiz(${i})">
+                    ${answer}
+                </button>
+            `).join("")}
+        </div>
+    </section>`;
+}
+
+function answerQuiz(i) {
+    if(questions[questionIndex][2][i] === questions[questionIndex][1]) {
+        score++;
+    }
+
+    questionIndex++;
+    renderQuiz();
+}
+
+
+/* FLASHCARD STUDIO */
+
+let cards = JSON.parse(localStorage.getItem("flashcards") ||
+'[{"front":"What is HTML?","back":"A markup language used to structure webpages."},{"front":"What is JavaScript?","back":"A programming language used to add web interactivity."}]');
+
+function safeText(value) {
+    return String(value).replace(/[&<>"']/g, char => ({
+        "&":"&amp;",
+        "<":"&lt;",
+        ">":"&gt;",
+        '"':"&quot;",
+        "'":"&#39;"
+    })[char]);
+}
+
+function openFlashcards() {
+    main.innerHTML = `
+    <section class="workspace">
+        <button class="back" onclick="backHome()">← Back to Home</button>
+
+        <p class="eyebrow">REVISION</p>
+        <h1>🗂️ Flashcard Studio</h1>
+        <p class="muted">Create and revise your own study cards.</p>
+
+        <div class="panel">
+            <input id="front" placeholder="Question / Front">
+            <input id="back" placeholder="Answer / Back">
+            <button class="btn" onclick="addCard()">+ Add Flashcard</button>
+        </div>
+
+        <div class="flash-grid" id="cards"></div>
+    </section>`;
+
+    renderCards();
+}
+
+function addCard() {
+    let front = document.getElementById("front").value.trim();
+    let back = document.getElementById("back").value.trim();
+
+    if(!front || !back) {
+        alert("Please enter both question and answer.");
+        return;
+    }
+
+    cards.push({front,back});
+    localStorage.setItem("flashcards",JSON.stringify(cards));
+
+    renderCards();
+}
+
+function renderCards() {
+    document.getElementById("cards").innerHTML =
+        cards.map((card,i) => `
+        <div class="flash">
+            <span class="category">CARD ${i+1}</span>
+            <h3 id="face${i}">${safeText(card.front)}</h3>
+
+            <button class="btn" onclick="flipCard(${i})">
+                Flip Card
+            </button>
+
+            <button class="btn alt" onclick="deleteCard(${i})">
+                Delete
+            </button>
+        </div>
+    `).join("");
+}
+
+function flipCard(i) {
+    const face = document.getElementById("face"+i);
+
+    face.dataset.flip = face.dataset.flip === "1" ? "0" : "1";
+
+    face.textContent = face.dataset.flip === "1"
+        ? cards[i].back
+        : cards[i].front;
+}
+
+function deleteCard(i) {
+    cards.splice(i,1);
+    localStorage.setItem("flashcards",JSON.stringify(cards));
+    renderCards();
+}
+
+
+/* STUDY PLANNER */
+
+let tasks = JSON.parse(localStorage.getItem("studyTasks") || "[]");
+
+function openPlanner() {
+    main.innerHTML = `
+    <section class="workspace">
+        <button class="back" onclick="backHome()">← Back to Home</button>
+
+        <p class="eyebrow">PRODUCTIVITY</p>
+        <h1>📅 Study Planner</h1>
+        <p class="muted">Organize your daily study activities.</p>
+
+        <div class="panel">
+            <input id="task" placeholder="Enter your study task">
+            <input id="date" type="date">
+            <button class="btn" onclick="addTask()">+ Add Task</button>
+        </div>
+
+        <div class="panel">
+            <h2 id="stats"></h2>
+            <div id="list"></div>
+        </div>
+    </section>`;
+
+    renderTasks();
+}
+
+function addTask() {
+    let task = document.getElementById("task").value.trim();
+    let date = document.getElementById("date").value;
+
+    if(!task) {
+        alert("Please enter a study task.");
+        return;
+    }
+
+    tasks.push({task,date,done:false});
+
+    localStorage.setItem("studyTasks",JSON.stringify(tasks));
+
+    renderTasks();
+}
+
+function toggleTask(i) {
+    tasks[i].done = !tasks[i].done;
+
+    localStorage.setItem("studyTasks",JSON.stringify(tasks));
+    renderTasks();
+}
+
+function deleteTask(i) {
+    tasks.splice(i,1);
+
+    localStorage.setItem("studyTasks",JSON.stringify(tasks));
+    renderTasks();
+}
+
+function renderTasks() {
+    let done = tasks.filter(t => t.done).length;
+
+    document.getElementById("stats").textContent =
+        `${done}/${tasks.length} Tasks Completed`;
+
+    document.getElementById("list").innerHTML =
+        tasks.length ? tasks.map((t,i) => `
+        <div class="panel">
+            <input type="checkbox"
+                ${t.done?"checked":""}
+                onchange="toggleTask(${i})">
+
+            <strong style="${t.done?"text-decoration:line-through":""}">
+                ${safeText(t.task)}
+            </strong>
+
+            <p class="muted">${safeText(t.date || "No date set")}</p>
+
+            <button class="btn alt" onclick="deleteTask(${i})">
+                Delete
+            </button>
+        </div>
+        `).join("") : "<p class='muted'>No tasks yet. Add your first study task.</p>";
+}
+
+
+/* APPLICATION ROUTER */
+
+function openApp(app) {
+    window.scrollTo({top:0,behavior:"smooth"});
+
+    if(app === "classroom") openClassroom();
+    if(app === "quiz") openQuiz();
+    if(app === "flashcards") openFlashcards();
+    if(app === "planner") openPlanner();
+}
+
+
+/* SPECIAL EFFECTS */
+
+function activateEffects() {
+    document.querySelectorAll(".reveal").forEach(element => {
+        observer.observe(element);
+    });
+
+    document.querySelectorAll(".card").forEach(card => {
+        card.addEventListener("pointermove", event => {
+            if(!window.matchMedia("(hover:hover) and (pointer:fine)").matches) return;
+
+            let rect = card.getBoundingClientRect();
+
+            let x = (event.clientX - rect.left) / rect.width;
+            let y = (event.clientY - rect.top) / rect.height;
+
+            card.style.transform =
+                `perspective(900px) rotateX(${(0.5-y)*7}deg) rotateY(${(x-0.5)*7}deg) translateY(-5px)`;
+        });
+
+        card.addEventListener("pointerleave", () => {
+            card.style.transform = "";
+        });
+    });
+}
+
+const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+        if(entry.isIntersecting) {
+            entry.target.classList.add("visible");
+        }
+    });
+}, {threshold:0.1});
+
+window.addEventListener("pointermove", event => {
+    const glow = document.getElementById("glow");
+
+    if(glow) {
+        glow.style.left = event.clientX + "px";
+        glow.style.top = event.clientY + "px";
+    }
+});
+
+activateEffects();
+
+</script>
 
 </body>
 </html>
